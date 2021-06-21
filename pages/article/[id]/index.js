@@ -1,3 +1,4 @@
+import {server} from '../../../config'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 
@@ -16,21 +17,8 @@ const article = ({article}) => {
     )
 }
 
-/* Using getServerSideProps vs getStaticProps + getStaticPaths */
-// export const getServerSideProps = async (context) => {
-//     const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${context.params.id}`)
-
-//     const article = await res.json()
-
-//     return {
-//         props: {
-//             article
-//         }
-//     }
-// }
-
 export const getStaticProps = async (context) => {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${context.params.id}`)
+    const res = await fetch(`${server}/api/articles/${context.params.id}`)
 
     const article = await res.json()
 
@@ -43,7 +31,7 @@ export const getStaticProps = async (context) => {
 
 export const getStaticPaths = async() => {
     const res = await fetch(
-        `https://jsonplaceholder.typicode.com/posts`
+        `${server}/api/articles`
     )
 
     const articles = await res.json()
@@ -57,5 +45,48 @@ export const getStaticPaths = async() => {
         fallback: false,
     }
 }
+
+/* Fetching from jsonplaceholder instead of from our API Using getServerSideProps */
+// export const getServerSideProps = async (context) => {
+//     const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${context.params.id}`)
+
+//     const article = await res.json()
+
+//     return {
+//         props: {
+//             article
+//         }
+//     }
+// }
+
+/* Fetching from jsonplaceholder instead of from our API using getStaticProps + getStaticPaths */
+// export const getStaticProps = async (context) => {
+//     const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${context.params.id}`)
+
+//     const article = await res.json()
+
+//     return {
+//         props: {
+//             article
+//         }
+//     }
+// }
+
+// export const getStaticPaths = async() => {
+//     const res = await fetch(
+//         `https://jsonplaceholder.typicode.com/posts`
+//     )
+
+//     const articles = await res.json()
+
+//     const ids = articles.map(article => article.id)
+
+//     const paths = ids.map((id) => ({params: {id: id.toString()}}))
+
+//     return {
+//         paths,
+//         fallback: false,
+//     }
+// }
 
 export default article
